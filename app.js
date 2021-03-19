@@ -7,10 +7,12 @@ try {
   // Try Load from ENV
   if (process.env.WEBHOOK_URL) {
     console.debug("Load from ENV")
-    config.webhookUrl = process.env.WEBHOOK_URL;
-    config.token = process.env.TOKEN;
-    config.port = process.env.PORT || 3000;
-    config.ownerId = process.env.OWNER_ID;
+    config = {
+      webhookUrl: process.env.WEBHOOK_URL,
+      token: process.env.TOKEN,
+      port: process.env.PORT,
+      ownerId: process.env.OWNER_ID
+    }
   } else {
     // Try Load from Config.json
     console.debug("Load from JSON")
