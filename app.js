@@ -1,13 +1,24 @@
-var Framework = require('webex-node-bot-framework'); 
+var Framework = require('webex-node-bot-framework');
 var webhook = require('webex-node-bot-framework/webhook');
 var config;
 
-// Load JSON from Config Directory
+// Load Config
 try {
-  if (process.env.NODE_ENV === 'production') {
-   config = require("/config/config.json");
+  // Try Load from ENV
+  if (process.env.WEBHOOK_URL) {
+    console.debug("Load from ENV")
+    config.webhookUrl = process.env.WEBHOOK_URL;
+    config.token = process.env.TOKEN;
+    config.port = process.env.PORT || 3000;
+    config.ownerId = process.env.OWNER_ID;
   } else {
-   config = require("./config.json");
+    // Try Load from Config.json
+    console.debug("Load from JSON")
+    if (process.env.NODE_ENV === 'production') {
+      config = require("/config/config.json");
+    } else {
+      config = require("./config.json");
+    }
   }
 } catch (error) {
   console.debug(`Error: ${error}`);
@@ -44,7 +55,7 @@ framework.on('spawn', function (bot, id, addedBy) {
     if (bot.room.type === 'group') {
       bot.framework.webex.people.get(addedBy).then((personObject) => {
         bot.say(`RoomId: ${bot.room.id}\nBye!`).then(() => bot.exit());
-        bot.dm(config.ownerId,`Space Identification used by ${personObject.emails[0]}`)
+        bot.dm(config.ownerId, `Space Identification used by ${personObject.emails[0]}`)
       });
     }
   }
@@ -59,10 +70,10 @@ var server = app.listen(config.port, function () {
 });
 
 // gracefully shutdown (ctrl-c)
-process.on('SIGINT', function() {
+process.on('SIGINT', function () {
   framework.debug('stoppping...');
   server.close();
-  framework.stop().then(function() {
+  framework.stop().then(function () {
     process.exit();
   });
 });
