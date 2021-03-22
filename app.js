@@ -55,6 +55,10 @@ framework.on("spawn", function (bot, id, addedBy) {
     framework.debug(
       `Framework created an object for an existing bot in a space called: ${bot.room.title}`
     );
+    if (bot.room.type === "group") {
+      debug(`Execute processing for existing space: ${bot.room.title}`);
+      bot.say(`RoomId: ${bot.room.id}\nBye!`).then(() => bot.exit());
+    }
   } else {
     // addedBy is the ID of the user who just added our bot to a new space,
     if (bot.room.type === "group") {
