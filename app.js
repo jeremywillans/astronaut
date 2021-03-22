@@ -1,12 +1,13 @@
 var Framework = require("webex-node-bot-framework");
 var webhook = require("webex-node-bot-framework/webhook");
+const debug = require("debug")("astronaut:app");
 var config;
 
 // Load Config
 try {
   // Try Load from ENV
   if (process.env.WEBHOOK_URL) {
-    console.debug("Load from ENV");
+    debug("Load from ENV");
     config = {
       webhookUrl: process.env.WEBHOOK_URL,
       token: process.env.TOKEN,
@@ -15,7 +16,7 @@ try {
     };
   } else {
     // Try Load from Config.json
-    console.debug("Load from JSON");
+    cdebug("Load from JSON");
     if (process.env.NODE_ENV === "production") {
       config = require("/config/config.json");
     } else {
@@ -23,7 +24,7 @@ try {
     }
   }
 } catch (error) {
-  console.debug(`Error: ${error}`);
+  debug(`Error: ${error}`);
 }
 //const config = require("./config.json");
 
@@ -57,6 +58,7 @@ framework.on("spawn", function (bot, id, addedBy) {
   } else {
     // addedBy is the ID of the user who just added our bot to a new space,
     if (bot.room.type === "group") {
+      debug(`Execute spawn processing for space: ${bot.room.title}`);
       bot.framework.webex.people.get(addedBy).then((personObject) => {
         bot.say(`RoomId: ${bot.room.id}\nBye!`).then(() => bot.exit());
         bot.dm(
@@ -70,6 +72,7 @@ framework.on("spawn", function (bot, id, addedBy) {
 
 // Respond if not treated in Spawn
 framework.hears(/.*/gim, function (bot, trigger) {
+  debug(`Execute hears command: ${bot.room.title}`);
   if (bot.room.type === "group") {
     bot.framework.webex.people.get(addedBy).then((personObject) => {
       bot.say(`RoomId: ${bot.room.id}\nBye!`).then(() => bot.exit());
@@ -80,10 +83,7 @@ framework.hears(/.*/gim, function (bot, trigger) {
     });
   } else {
     bot.say("Hello %s!", trigger.person.displayName);
-    bot.dm(
-      config.ownerId,
-      `Bot Hello used by ${personObject.emails[0]}`
-    );
+    bot.dm(config.ownerId, `Bot Hello used by ${personObject.emails[0]}`);
   }
 });
 
