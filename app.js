@@ -74,7 +74,7 @@ framework.on("spawn", function (bot, id, addedBy) {
 framework.hears(/.*/gim, function (bot, trigger) {
   debug(`Execute hears command: ${bot.room.title}`);
   if (bot.room.type === "group") {
-    bot.framework.webex.people.get(addedBy).then((personObject) => {
+    bot.framework.webex.people.get(trigger.person.id).then((personObject) => {
       bot.say(`RoomId: ${bot.room.id}\nBye!`).then(() => bot.exit());
       bot.dm(
         config.ownerId,
