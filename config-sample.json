@@ -1,6 +1,0 @@
-{
-    "webhookUrl": "http://XXXXXXX.ngrok.io/framework",
-    "token": "BOT_TOKEN",
-    "port": 3000,
-    "ownerId": "OWNERID"
-}
