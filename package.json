@@ -1,10 +1,9 @@
 {
   "dependencies": {
-    "body-parser": "^1.19.0",
     "debug": "^4.3.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "webex-node-bot-framework": "^2.3.4"
+    "webex-node-bot-framework": "^2.3.6"
   },
   "name": "astronaut",
   "version": "1.0.0",
@@ -13,7 +12,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
-    "dev": "export DEBUG=framework* && nodemon app.js"
+    "dev": "export DEBUG=astronaut* && nodemon app.js"
   },
   "repository": {
     "type": "git",
