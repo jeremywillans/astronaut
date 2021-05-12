@@ -46,6 +46,21 @@ framework.on('initialized', () => {
   debug('Framework initialized successfully! [Press CTRL-C to quit]');
 });
 
+async function processRoom(bot, personId) {
+  if (personId) {
+    const person = await bot.framework.webex.people.get(personId);
+    const buff = Buffer.from(bot.room.id, 'base64');
+    const base64 = buff.toString('utf-8');
+    const uuid = base64.slice(base64.lastIndexOf('/') + 1);
+    await bot.dm(personId, 'html', `<a href='webexteams://im?space=${uuid}'>${bot.room.title}</a><blockquote class=info>${bot.room.id}`);
+    bot.exit();
+    debug(`Space Identification used by ${person.emails[0]}`);
+  } else {
+    await bot.say(`RoomId: ${bot.room.id}\nBye!`);
+    bot.exit();
+  }
+}
+
 // Handle Spawn Event
 framework.on('spawn', (bot, id, addedBy) => {
   if (!addedBy) {
@@ -54,17 +69,14 @@ framework.on('spawn', (bot, id, addedBy) => {
     debug(`Execute spawn in existing space called: ${bot.room.title}`);
     if (bot.room.type === 'group') {
       debug(`Execute processing for existing space: ${bot.room.title}`);
-      bot.say(`RoomId: ${bot.room.id}\nBye!`).then(() => bot.exit());
+      processRoom(bot);
     }
   } else {
     debug('new room');
     // addedBy is the ID of the user who just added our bot to a new space,
     if (bot.room.type === 'group') {
       debug(`Execute spawn processing for space: ${bot.room.title}`);
-      bot.framework.webex.people.get(addedBy).then((personObject) => {
-        bot.say(`RoomId: ${bot.room.id}\nBye!`).then(() => bot.exit());
-        debug(`Space Identification used by ${personObject.emails[0]}`);
-      });
+      processRoom(bot, addedBy);
     }
   }
 });
@@ -73,12 +85,9 @@ framework.on('spawn', (bot, id, addedBy) => {
 framework.hears(/.*/gim, (bot, trigger) => {
   debug(`Execute hears command: ${bot.room.title}`);
   if (bot.room.type === 'group') {
-    bot.framework.webex.people.get(trigger.person.id).then((personObject) => {
-      bot.say(`RoomId: ${bot.room.id}\nBye!`).then(() => bot.exit());
-      debug(`Space Identification used by ${personObject.emails[0]}`);
-    });
+    processRoom(bot, trigger.person.id);
   } else {
-    bot.say(`Hello ${trigger.person.displayName}!`);
+    bot.say(`Hello ${trigger.person.displayName}!\nAdd me to a Webex Space to tell you the RoomID =)`);
     debug(`Bot Hello used by ${trigger.person.emails[0]}`);
   }
 });
