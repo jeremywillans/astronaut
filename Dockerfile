@@ -15,7 +15,6 @@ RUN npm install --production
 
 # Expose Token ENV
 ENV TOKEN bot-token-from-developer-dot-webex-dot-com
-ENV OWNER_ID owner-id-from-developer-dot-webex-dot-com
 
 EXPOSE 3000
 CMD [ "node", "app.js" ]
