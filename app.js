@@ -52,7 +52,11 @@ async function processRoom(bot, personId) {
     const buff = Buffer.from(bot.room.id, 'base64');
     const base64 = buff.toString('utf-8');
     const uuid = base64.slice(base64.lastIndexOf('/') + 1);
-    await bot.dm(personId, 'html', `<a href='webexteams://im?space=${uuid}'>${bot.room.title}</a><blockquote class=info>${bot.room.id}`);
+    await bot.dm(
+      personId,
+      'html',
+      `<a href='webexteams://im?space=${uuid}'>${bot.room.title}</a><blockquote class=info>${bot.room.id}`,
+    );
     bot.exit();
     debug(`Space Identification used by ${person.emails[0]}`);
   } else {
@@ -87,7 +91,9 @@ framework.hears(/.*/gim, (bot, trigger) => {
   if (bot.room.type === 'group') {
     processRoom(bot, trigger.person.id);
   } else {
-    bot.say(`Hello ${trigger.person.displayName}!\nAdd me to a Webex Space to tell you the RoomID =)`);
+    bot.say(
+      `Hello ${trigger.person.displayName}!\nAdd me to a Webex Space to tell you the RoomID =)`,
+    );
     debug(`Bot Hello used by ${trigger.person.emails[0]}`);
   }
 });
