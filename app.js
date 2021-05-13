@@ -16,7 +16,7 @@ try {
   }
   config = {
     token: process.env.TOKEN,
-    removeDeviceRegistrationsOnStart: true,
+    // removeDeviceRegistrationsOnStart: true,
     messageFormat: 'markdown',
   };
   if (process.env.WEBHOOK_URL) {
@@ -27,7 +27,7 @@ try {
       process.env.SECRET || 'replace-me-with-a-secret-string';
   }
 } catch (error) {
-  debug(`Error: ${error}`);
+  debug(`Error: ${error.message}`);
 }
 
 let app;
