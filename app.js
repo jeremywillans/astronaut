@@ -50,12 +50,11 @@ async function processRoom(bot, personId) {
   if (personId) {
     const person = await bot.framework.webex.people.get(personId);
     const buff = Buffer.from(bot.room.id, 'base64');
-    const base64 = buff.toString('utf-8');
-    const uuid = base64.slice(base64.lastIndexOf('/') + 1);
+    const str64 = buff.toString('utf-8');
+    const uuid = str64.slice(str64.lastIndexOf('/') + 1);
     await bot.dm(
       personId,
-      'html',
-      `<a href='webexteams://im?space=${uuid}'>${bot.room.title}</a><blockquote class=info>${bot.room.id}`,
+      `webexteams://im?space=${uuid}<blockquote class=info>${bot.room.id}</blockquote>`,
     );
     bot.exit();
     debug(`Space Identification used by ${person.emails[0]}`);
@@ -63,6 +62,41 @@ async function processRoom(bot, personId) {
     await bot.say(`RoomId: ${bot.room.id}\nBye!`);
     bot.exit();
   }
+}
+
+async function base64(bot, trigger) {
+  debug('execute base64 function');
+  let type = 'unknown';
+  let source;
+  source = trigger.args[0].trim();
+  if (source.includes('webexteams://im?space=')) {
+    source = source.replace('webexteams://im?space=', '');
+  }
+  if (source.match(/^.{8}-.{4}-.{4}-.{4}-.{12}$/g)) {
+    type = 'encode';
+  }
+  if (source.length === 76) {
+    type = 'decode';
+  }
+
+  let message;
+  switch (type) {
+    case 'encode': {
+      const id = Buffer.from(`ciscospark://us/ROOM/${source}`).toString('base64');
+      message = `webexteams://im?space=${source}<blockquote class=info>${id}</blockquote>`;
+      break;
+    }
+    case 'decode': {
+      const str64 = Buffer.from(source, 'base64').toString('utf-8');
+      const uid = str64.slice(str64.lastIndexOf('/') + 1);
+      message = `webexteams://im?space=${uid}<blockquote class=info>\`webexteams://im?space=${uid}\`</blockquote>`;
+      break;
+    }
+    default:
+      message = 'Unrecognized String, please DM me the RoomID or Space Link for Base64 conversion.';
+  }
+  bot.say(`${message}`);
+  debug(`Bot used by ${trigger.person.emails[0]}`);
 }
 
 // Handle Spawn Event
@@ -85,17 +119,15 @@ framework.on('spawn', (bot, id, addedBy) => {
   }
 });
 
-// Respond if not treated in Spawn
+// Process Messages
 framework.hears(/.*/gim, (bot, trigger) => {
   debug(`Execute hears command: ${bot.room.title}`);
   if (bot.room.type === 'group') {
     processRoom(bot, trigger.person.id);
-  } else {
-    bot.say(
-      `Hello ${trigger.person.displayName}!\nAdd me to a Webex Space to tell you the RoomID =)`,
-    );
-    debug(`Bot Hello used by ${trigger.person.emails[0]}`);
+    return;
   }
+  // Process Message from DM
+  base64(bot, trigger);
 });
 
 let server;
