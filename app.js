@@ -54,7 +54,7 @@ async function processRoom(bot, personId) {
     const uuid = str64.slice(str64.lastIndexOf('/') + 1);
     await bot.dm(
       personId,
-      `webexteams://im?space=${uuid}<blockquote class=info>${bot.room.id}</blockquote>`,
+      `webexteams://im?space=${uuid}  \n<blockquote class=info>${bot.room.id}</blockquote>`,
     );
     bot.exit();
     debug(`Space Identification used by ${person.emails[0]}`);
@@ -83,13 +83,13 @@ async function base64(bot, trigger) {
   switch (type) {
     case 'encode': {
       const id = Buffer.from(`ciscospark://us/ROOM/${source}`).toString('base64');
-      message = `webexteams://im?space=${source}<blockquote class=info>${id}</blockquote>`;
+      message = `webexteams://im?space=${source}  \n<blockquote class=info>${id}</blockquote>`;
       break;
     }
     case 'decode': {
       const str64 = Buffer.from(source, 'base64').toString('utf-8');
       const uid = str64.slice(str64.lastIndexOf('/') + 1);
-      message = `webexteams://im?space=${uid}<blockquote class=info>\`webexteams://im?space=${uid}\`</blockquote>`;
+      message = `webexteams://im?space=${uid}  \n<blockquote class=info>${uid}</blockquote>`;
       break;
     }
     default:
