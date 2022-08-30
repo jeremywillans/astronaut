@@ -1,12 +1,10 @@
 # astronaut
 
-Webex Bot used to return the RoomId of a Space and then leave.
+Webex Bot used for decoding the RoomId of Webex Spaces, either by adding to the space (and then leaving) or via 1:1 Messaging.
 
 ## Deployment
 1. Register a Bot at [Webex Developers](https://developer.webex.com/my-apps) for your Organization
 2. Build and Deploy Docker Container (or deploy to Cloud)
-
-    **Note:** Additional Environmental Variables are outlined below
 
     ```
     > docker build --tag astronaut .
@@ -18,14 +16,20 @@ Webex Bot used to return the RoomId of a Space and then leave.
 
 ### Environmental Variables
 
-| Name | Type |  Description
-| ---- | ---- | -------
-| TOKEN | string | Bot Token
-| HOST | string | Remote Host/IP of Destination App
-| URI | string | Remote URI of Destination App to send event 
-| PORT | int | Remote Port of Destination App
-| DELETE | bool | (Optional) Deletes existing entries on startup
-| DEBUG | string | `DEBUG=hookbuster*` Used to get Debug output from App
+The following environmental variables can be used to customize the deployment of this app.
+
+| Name | Required | Type | Default |  Description
+| ---- | ---- | ---- | ---- | -------
+| TOKEN | **Yes** | string |  | Bot Token from developer.webex.com
+| WEBHOOK_URL | no | string |  | Inbound Webhook URL (must be externally reachable)
+| SECRET | no | string |  | String used to authenticate Webhook
+| PORT | no | int | `3000` | Port used by container
+| APP_NAME | no | string | `astronaut` | App Name used for Loki Logging
+| LOKI_ENABLED | no | bool | `false` | Send Logs to external Loki server
+| LOKI_HOST| no | string | `http://loki:3100` | Destination address for Loki server
+| CONSOLE_LEVEL | no  | bool | `info` | Logging level exposed to Console
+
+**Note:** Webhook Url, Secret and Port are listed as optional as this bot supports [Websockets](https://developer.webex.com/blog/using-websockets-with-the-webex-javascript-sdk) for connectivity
 
 ## Support
 In case you've found a bug, please [open an issue on GitHub](../../issues).
