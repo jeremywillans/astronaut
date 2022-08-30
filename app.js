@@ -64,7 +64,7 @@ async function base64(bot, trigger) {
   source = trigger.args[0].trim();
   if (source.includes('webexteams://im?space=')) {
     source = source.replace('webexteams://im?space=', '');
-    includeLink = true;
+    includeLink = false;
   }
   if (source.match(/^.{8}-.{4}-.{4}-.{4}-.{12}$/g)) {
     type = 'encode';
