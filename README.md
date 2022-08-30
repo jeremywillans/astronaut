@@ -6,18 +6,26 @@ Webex Bot used to return the RoomId of a Space and then leave.
 1. Register a Bot at [Webex Developers](https://developer.webex.com/my-apps) for your Organization
 2. Build and Deploy Docker Container (or deploy to Cloud)
 
-    **Note:** Webhook, Secret and Port can be omitted if you want to use Websockets.
+    **Note:** Additional Environmental Variables are outlined below
 
     ```
     > docker build --tag astronaut .
     > docker create --name astronaut \
       -e TOKEN=bot-token-from-developer-dot-webex-dot-com \
-      (optional) -e WEBHOOK_URL=https://yourdomain.com/framework \
-      (optional) -e SECRET=replace-me-with-a-secret-string \
-      (optional) -e PORT=3000 \
       astronaut
 
 3. Verify Docker logs to ensure bot as started successfully.
+
+### Environmental Variables
+
+| Name | Type |  Description
+| ---- | ---- | -------
+| TOKEN | string | Bot Token
+| HOST | string | Remote Host/IP of Destination App
+| URI | string | Remote URI of Destination App to send event 
+| PORT | int | Remote Port of Destination App
+| DELETE | bool | (Optional) Deletes existing entries on startup
+| DEBUG | string | `DEBUG=hookbuster*` Used to get Debug output from App
 
 ## Support
 In case you've found a bug, please [open an issue on GitHub](../../issues).
