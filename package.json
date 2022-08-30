@@ -1,10 +1,4 @@
 {
-  "dependencies": {
-    "debug": "^4.3.2",
-    "dotenv": "^10.0.0",
-    "express": "^4.17.1",
-    "webex-node-bot-framework": "^2.3.7"
-  },
   "name": "astronaut",
   "version": "1.0.0",
   "description": "Astronaut Space Identification Bot",
@@ -12,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
-    "dev": "export DEBUG=astronaut* && nodemon app.js"
+    "dev": "nodemon app.js"
   },
   "repository": {
     "type": "git",
@@ -20,9 +14,17 @@
   },
   "author": "Jeremy Willans",
   "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "ms": "^2.1.3",
+    "webex-node-bot-framework": "^2.3.13",
+    "winston": "^3.8.1",
+    "winston-loki": "^6.0.6"
+  },
   "devDependencies": {
-    "eslint": "^7.32.0",
-    "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-plugin-import": "^2.24.2"
+    "eslint": "^8.22.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0"
   }
 }
